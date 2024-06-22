@@ -138,9 +138,7 @@ async function clearAllItems() {
               </InputGroup.Text>
             </InputGroup>
           ))}
-          <Button className="bg-danger mt-3 d-flex border-0 mx-auto" onClick={clearAllItems}>
-            Clear All Items
-          </Button>
+       
         </Card.Body>
       </Card>
     </Container>
