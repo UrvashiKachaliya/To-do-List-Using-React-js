@@ -8,6 +8,7 @@ export default function List() {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
   
+//useEffect
 
   useEffect(() => {
     fetchTodos();
@@ -15,7 +16,7 @@ export default function List() {
   }, []);
 
 
-
+//Add Todo
   async function AddTodos() {
     let data = { todo };
 
@@ -41,6 +42,8 @@ export default function List() {
     }
   }
 
+  //FetchTodo
+
   async function fetchTodos() {
     const result = await fetch("http://localhost:3000/todos");
     const data = await result.json();
@@ -52,6 +55,8 @@ export default function List() {
       console.error("Error fetching todos:", data);
     }
   }
+
+  //Delete Todo
   async function deleteTodo(id) {
     let userid=id;
     console.log(userid)
@@ -71,29 +76,29 @@ export default function List() {
             fetchTodos(); 
         } 
 }
-
-//CLEAR ALL ITEMS
-async function clearAllItems() {
-  let result = await fetch("http://localhost:3000/todos/clear", {
-    method: "DELETE",
-    headers: {
+async function EditTodo(id,updatedtodo){
+  let result=await fetch(`http://localhost:3000/todos/${id}`,{
+    method:"PUT",
+    headers:{
       "Content-Type": "application/json",
-      Accept: "application/json",
+      "Accept": "application/json",
     },
-  });
-
-  result = await result.json();
-
-  if (result) {
-    alert("All todos deleted successfully");
+    body:JSON.stringify({todo:updatedtodo})
+  })
+  result=await result.json();
+  console.log("message",result);
+  if(result){
+    alert("Todo updated successfully");
     fetchTodos();
-  } else {
-    console.error("Error clearing all todos:", result);
   }
+
+
 }
 
 
-  return (
+
+
+return (
     <Container
       style={{
         display: "flex",
@@ -130,7 +135,15 @@ async function clearAllItems() {
           {todos.map((item) => (
             <InputGroup className="mb-3" key={item.id}>
               <Form.Control value={item.todo} readOnly></Form.Control>
-              <InputGroup.Text className="px-3" style={{ cursor: "pointer" }}>
+              <InputGroup.Text className="px-3" style={{ cursor: "pointer"  }} onClick={()=>{
+                const updatedtodo=prompt("Update Your Todo",item.todo)
+                if(updatedtodo!==null){
+                  EditTodo(item.id,updatedtodo)
+                }
+              }
+
+
+              }> 
                 <EditIcon className="text-success" />
               </InputGroup.Text>
               <InputGroup.Text className="px-3" style={{ cursor: "pointer" }} onClick={() => deleteTodo(item.id)}>
